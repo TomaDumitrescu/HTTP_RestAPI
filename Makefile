@@ -8,7 +8,7 @@ run: client
 	./client
 
 pack:
-	zip 321CA_Dumitrescu_Toma_Tema4PC.zip *.c *.h Makefile README
+	zip web_client.zip *.c *.h Makefile README
 
 clean:
 	rm -f *.o client

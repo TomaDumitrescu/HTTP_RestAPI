@@ -1,8 +1,5 @@
 # Copyright <2024> Dumitrescu Toma-Ioan
 
-Faculty of Automatic Control and Computer Science
-Group: 321CA
-
 Web Client communicating with REST API
 
 ## Description
@@ -94,6 +91,3 @@ retains logged out user cookies is freed.
 
     check_num(num, len): verifies if all characters of num are
 numbers and if there is no number starting with 0 except 0
-
-## Bibliography
-Used the HTTP laboratory code skeleton from "upb laboratoare pcom"

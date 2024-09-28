@@ -1,0 +1,99 @@
+# Copyright <2024> Dumitrescu Toma-Ioan
+
+Faculty of Automatic Control and Computer Science
+Group: 321CA
+
+Web Client communicating with REST API
+
+## Description
+
+    The program resembles a client that sends requests to a
+server and parse its responses. Client has a UI in terminal,
+the requests being based on the reading from STDIN. The
+following commands are possible: register, login, enter_library,
+get_books, get_book <id>, add_book <printed_params>, delete_book
+<id>, logout, exit. There can't be multiple users logged in
+to the server at the same time on the client application.
+
+## Usage
+
+    Run in terminal make client and then write in program stdin
+the commands that the client will send to the server.
+
+## Utilities
+
+    buffer.c, buffer.h -> operations on buffer
+    helpers.c, helpers.h -> appending \r\n to headers, opening
+TCP connection to a server, closing the connection, send and
+receive with while loops to assure all bytes are sent, finding
+json object start, extracting cookies from server response,
+based on the fact that they are stored on Set-Cookie line and
+on ignoring unnecessary characters
+    requests.c, requests.h -> hide the implementations of GET,
+POST and simple DELETE requests, using only the functions with
+easy to create parameters
+    parson.c -> used to serialize or create a json object,
+using the serialization example from parson README
+
+## Implementation
+
+    Main logic: interact is the variable in which commands
+are stored, read as a line to detect pottentialy format errors,
+login_cookie and entry_token to prove the server certain
+information about the client, logout boolean that is true
+when no user is logged in. Command menu is an infinite
+loop where each string match redirects logic to the
+specific function. After each logout, user cookies are
+freed from memory (mem allocated by command functions).
+
+    For each command, a connection from client to
+server is established, another option that may not work
+depending on the server settings being the Keep-Alive
+more optimized connection type.
+
+    print_error(error): For generalized error handling,
+the error returned by the server is parsed and printed,
+8 being the const number of ignored characters after the
+pointer returned by strstr to get the error message. Besides
+the error messages from server, there is also a check in the
+program for basic input validity: no empty creditentials,
+no space in creditentials, field with numbers should be
+numbers when read to stdin, otherwise error message is printed.
+
+    registration(): Creditentials read, no spaces (strchr), sent
+as json obj to server in POST request, print server response
+
+    login(): Credintials read, sent as json obj to server in
+POST request to login server path, parse server response and
+return the cookie to be used in the future commands
+
+    enter_library(login_cookie): Send GET request to the server
+with the login cookie, parse the server response to return the
+value of the JWT Token of the json object in string format.
+
+    get_books(token): Append "Authorization: Bearer " before
+token (new header) using sprintf, send the GET request to the
+server, parse and print its response; token = NULL -> error
+
+    get_book(token): ~ get_books, null token - err, involving
+book id, input verified by the server with message returns.
+
+    read_book(params): Reads book details from stdin; used
+by add_book function (fgets, because spaces are allowed).
+
+    add_book(token): Book info read, sent (POST) in json fmt
+to server veryfing fmt = correct, token = null -> error.
+
+    delete_book(token): Reads the book id and sends (DELETE)
+request to the server, null token -> error.
+
+    logout_request(login_cookie): null token -> no user
+authenticated. Sends a GET request with the login cookie
+to the server logout path. After that, memory from main that
+retains logged out user cookies is freed.
+
+    check_num(num, len): verifies if all characters of num are
+numbers and if there is no number starting with 0 except 0
+
+## Bibliography
+Used the HTTP laboratory code skeleton from "upb laboratoare pcom"

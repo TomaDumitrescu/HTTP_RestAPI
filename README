@@ -91,3 +91,6 @@ retains logged out user cookies is freed.
 
     check_num(num, len): verifies if all characters of num are
 numbers and if there is no number starting with 0 except 0
+
+# Bibliography:
+Library: Parson 1.5.3 (https://github.com/kgabis/parson)
